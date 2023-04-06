@@ -1,11 +1,42 @@
+import { useState } from 'react';
+import { useAuth } from '../../context/authContext';
+import { useLoading } from '../../context/LoadingContext';
+import { toast } from 'react-toastify';
+
 function LoginForm() {
+  const { login } = useAuth();
+  const { startLoading, stopLoading } = useLoading();
+  const [input, setInput] = useState({
+    emailOrMobile: '',
+    password: ''
+  });
+
+  const handleChangeInput = e => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmitForm = async e => {
+    e.preventDefault();
+    try {
+      startLoading();
+      await login(input);
+      toast.success('sccess login');
+    } catch (err) {
+      toast.error(err.response.data.message);
+    } finally {
+      stopLoading();
+    }
+  };
   return (
-    <form>
+    <form onSubmit={handleSubmitForm}>
       <div className="mb-3">
         <input
           type="text"
           className="form-control rounded-md h-13"
           placeholder="Email address or phone number"
+          name="emailOrMobile"
+          value={input.emailOrMobile}
+          onChange={handleChangeInput}
         />
       </div>
       <div className="mb-3">
@@ -13,13 +44,13 @@ function LoginForm() {
           type="password"
           className="form-control rounded-md h-13"
           placeholder="Password"
+          name="password"
+          value={input.password}
+          onChange={handleChangeInput}
         />
       </div>
       <div className="mb-2 d-grid">
-        <button
-          type="button"
-          className="btn btn-primary fw-bold rounded-md h-12 text-4.5"
-        >
+        <button className="btn btn-primary fw-bold rounded-md h-12 text-4.5">
           Log In
         </button>
       </div>

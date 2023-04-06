@@ -10,6 +10,8 @@ function Router() {
       {user ? (
         <>
           <Route path="/" element={<PostPage />} />
+          <Route path="/friend" element={<FriendPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </>
       ) : (
         <Route path="/" element={<LoginPage />} />
