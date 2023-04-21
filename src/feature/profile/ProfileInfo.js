@@ -1,21 +1,26 @@
-import { toast } from 'react-toastify';
 import Avatar from '../../components/ui/Avatar';
 import AvatarGroup from '../../components/ui/AvatarGroup';
-import { useLoading } from '../../context/LoadingContext';
 import ProfileEdit from './ProfileEdit';
 import * as friendService from '../../api/friendApi';
-import { FRIEND_STATUS_ANNONYMOUS } from '../../config/constants';
+import { toast } from 'react-toastify';
+import { useLoading } from '../../context/LoadingContext';
+import {
+  FRIEND_STATUS_ANNONYMOUS,
+  FRIEND_STATUS_FRIEND,
+  FRIEND_STATUS_REQUESTER
+} from '../../config/constants';
 
 function ProfileInfo({
   isMe,
   user: { profileImage, firstName, lastName, id },
   friends,
   isFriend,
-  isAnnonymous,
+  isAnonymous,
   isRequester,
   isAccepter,
   changeStatusWithMe,
-  deleteFriend
+  deleteFriend,
+  createFriend
 }) {
   const { startLoading, stopLoading } = useLoading();
 
@@ -39,6 +44,9 @@ function ProfileInfo({
   const handleClickAdd = async () => {
     try {
       startLoading();
+      await friendService.addFriend(id);
+      changeStatusWithMe(FRIEND_STATUS_REQUESTER);
+      toast.success('success add friend');
     } catch (err) {
       console.log(err);
       toast.error(err.response?.data.message);
@@ -50,6 +58,10 @@ function ProfileInfo({
   const handleClickAccept = async () => {
     try {
       startLoading();
+      await friendService.acceptFriend(id);
+      changeStatusWithMe(FRIEND_STATUS_FRIEND);
+      createFriend();
+      toast.success('success accept friend');
     } catch (err) {
       console.log(err);
       toast.error(err.response?.data.message);
@@ -57,6 +69,7 @@ function ProfileInfo({
       stopLoading();
     }
   };
+
   return (
     <div className="d-flex flex-column flex-md-row align-items-center align-items-md-stretch mx-auto px-3 space-x-4 max-w-266">
       <div className="-mt-20 -mt-md-10 z-10">
@@ -91,7 +104,7 @@ function ProfileInfo({
             <i className="fa-solid fa-user-xmark" /> Unfriend
           </button>
         )}
-        {isAnnonymous && (
+        {isAnonymous && (
           <button className="btn btn-gray-200" onClick={handleClickAdd}>
             <i className="fa-solid fa-user-plus" /> Add Friend
           </button>

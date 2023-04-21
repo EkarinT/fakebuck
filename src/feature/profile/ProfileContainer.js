@@ -1,9 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useLoading } from '../../context/LoadingContext';
 import ProfileCover from './ProfileCover';
 import ProfileInfo from './ProfileInfo';
-import { useEffect, useState } from 'react';
-import { useLoading } from '../../context/LoadingContext';
-import * as userServices from '../../api/userApi';
+import * as userService from '../../api/userApi';
 import { toast } from 'react-toastify';
 import {
   FRIEND_STATUS_ACCEPTER,
@@ -28,7 +28,7 @@ function ProfileContainer() {
     const fetchUserFriends = async () => {
       try {
         startLoading();
-        const res = await userServices.getUserFriends(id);
+        const res = await userService.getUserFriends(id);
         setUser(res.data.user);
         setFriends(res.data.friends);
         setStatusWithMe(res.data.statusWithMe);
@@ -50,6 +50,11 @@ function ProfileContainer() {
     const nextFriends = friends.filter(item => item.id !== me.id);
     setFriends(nextFriends);
   };
+
+  const createFriend = () => {
+    setFriends([...friends, me]);
+  };
+
   return (
     <div
       className="shadow-sm pb-2"
@@ -61,11 +66,12 @@ function ProfileContainer() {
         user={user}
         friends={friends}
         isFriend={statusWithMe === FRIEND_STATUS_FRIEND}
-        isAnnonymous={statusWithMe === FRIEND_STATUS_ANNONYMOUS}
+        isAnonymous={statusWithMe === FRIEND_STATUS_ANNONYMOUS}
         isRequester={statusWithMe === FRIEND_STATUS_REQUESTER}
         isAccepter={statusWithMe === FRIEND_STATUS_ACCEPTER}
         changeStatusWithMe={changeStatusWithMe}
         deleteFriend={deleteFriend}
+        createFriend={createFriend}
       />
     </div>
   );
