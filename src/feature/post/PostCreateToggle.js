@@ -4,9 +4,8 @@ import { useAuth } from '../../context/authContext';
 import Modal from '../../components/ui/Modal';
 import { useState } from 'react';
 import PostForm from './PostForm';
-import { createPost } from '../../api/postApi';
 
-function PostCreateToggle() {
+function PostCreateToggle({ createPost }) {
   const {
     user: { id, profileImage, firstName }
   } = useAuth();
@@ -17,6 +16,7 @@ function PostCreateToggle() {
     await createPost(input);
     setIsOpen(false);
   };
+
   return (
     <div className="border bg-white shadow-sm px-3 rounded-lg tw-py-3">
       <div className="d-flex gap-2">

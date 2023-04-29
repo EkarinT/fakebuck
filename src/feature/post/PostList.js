@@ -1,9 +1,11 @@
 import Post from './Post';
 
-function PostList() {
+function PostList({ posts, toggleLike }) {
   return (
     <div className="d-flex flex-column gap-3">
-      <Post />
+      {posts.map(item => (
+        <Post key={item.id} posts={item} toggleLike={toggleLike} />
+      ))}
     </div>
   );
 }

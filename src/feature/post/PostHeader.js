@@ -1,29 +1,26 @@
-function PostHeader() {
+import { Link } from 'react-router-dom';
+import Avatar from '../../components/ui/Avatar';
+import { timeSince } from '../../utils/dateFormat';
+
+function PostHeader({
+  posts: {
+    User: { firstName, lastName, profileImage, id },
+    createdAt
+  }
+}) {
   return (
     <div className="d-flex align-items-center gap-2">
-      <a href="/#">
-        <img
-          src="https://images.pexels.com/photos/5193860/pexels-photo-5193860.png"
-          className="rounded-circle"
-          width="40"
-          height="40"
-          alt="user"
-        />
-      </a>
-      <div className="d-flex flex-column flex-fill">
-        <a
-          href="/#"
-          className="text-dark fw-bold no-underline hover-underline text-3.5"
-        >
-          Hsiao Li
-        </a>
-        <small className="text-muted text-3">2m</small>
+      <Link to={`/profile/${id}`}>
+        <Avatar src={profileImage} size="40" />
+      </Link>
+      <div className="d-flex flex-column">
+        <Link to={`profile/${id}`}>
+          {firstName} {lastName}
+        </Link>
+        <small className="text-muted text-3">{timeSince(createdAt)}</small>
       </div>
-      <div className="dropdown">
-        <button
-          className="btn rounded-circle position-relative h-9 w-9 hover-bg-gray-200"
-          data-bs-toggle="dropdown"
-        >
+      <div className="dropdown flex-fill text-end">
+        <button className="btn rounded-circle position-relative h-9 w-9 hover-bg-gray-200">
           <i className="fa-solid fa-ellipsis text-muted position-absolute top-50 left-50 translate-middle" />
         </button>
         <div className="dropdown-menu end-0 mt-1">

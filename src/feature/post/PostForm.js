@@ -2,12 +2,16 @@ import { useRef, useState } from 'react';
 import AddPhotoButton from './AddPhotoButton';
 import { toast } from 'react-toastify';
 import { useLoading } from '../../context/LoadingContext';
+import { useAuth } from '../../context/authContext';
 
 function PostForm({ onSubmit }) {
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(null);
   const fileEl = useRef();
 
+  const {
+    user: { firstName }
+  } = useAuth();
   const { startLoading, stopLoading } = useLoading();
   const handleSubmit = async e => {
     try {
@@ -39,7 +43,7 @@ function PostForm({ onSubmit }) {
     <form onSubmit={handleSubmit}>
       <textarea
         className="form-control border-0 shadow-none resize-none"
-        placeholder="What's on your mind, Hsiao?"
+        placeholder={`What's on your mind, ${firstName}?`}
         rows="5"
         value={title}
         onChange={e => setTitle(e.target.value)}
